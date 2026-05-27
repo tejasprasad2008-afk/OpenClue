@@ -149,6 +149,40 @@ export default function OpenClueDashboard() {
         </div>
       </header>
 
+      {/* SECTION: SYSTEM INFORMATION & ROADMAP */}
+      <section className="px-6 md:px-12 pb-12">
+        <div className="border border-black p-8 bg-black/5 grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div className="space-y-6">
+            <h3 className="font-mono text-xs uppercase tracking-widest font-bold">// DEMO_MECHANICS</h3>
+            <p className="font-serif italic text-lg leading-snug">
+              "This web deployment operates in <span className="font-bold underline text-black">High-Fidelity Demo Mode</span>. Since web-server environments lack direct access to local network hardware, the 'Brain' simulates a 130-line telemetry trace based on real airport Wi-Fi threat patterns."
+            </p>
+            <ul className="font-mono text-[10px] space-y-2 opacity-60">
+              <li>- CLOUD_BRAIN: OpenRouter (GPT-4o-Mini)</li>
+              <li>- ENGINE_CORE: Python 3.12 (Emulated)</li>
+              <li>- VALIDATION: 4-Turn Iterative Self-Healing Active</li>
+            </ul>
+          </div>
+          <div className="space-y-6 border-l border-black/10 pl-0 md:pl-12">
+            <h3 className="font-mono text-xs uppercase tracking-widest font-bold">// UNDER_CONSTRUCTION</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center border-b border-black/5 pb-2">
+                <span className="font-serif italic text-sm">Real-time Wireshark/tshark Ingestion</span>
+                <span className="font-mono text-[10px] bg-black text-white px-2">PLANNED_DAY_5</span>
+              </div>
+              <div className="flex justify-between items-center border-b border-black/5 pb-2">
+                <span className="font-serif italic text-sm">Live OUI Vendor Database Lookup</span>
+                <span className="font-mono text-[10px] bg-black text-white px-2">PLANNED_DAY_6</span>
+              </div>
+              <div className="flex justify-between items-center border-b border-black/5 pb-2">
+                <span className="font-serif italic text-sm">Apple Watch/iOS Push Notifications</span>
+                <span className="font-mono text-[10px] bg-black text-white px-2">PLANNED_DAY_7</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* SECTION B: LOG INGESTION DROP ZONE */}
       <section className="px-6 md:px-12 py-12">
         <button 
