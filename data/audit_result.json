@@ -1,0 +1,100 @@
+{
+  "audit_summary": {
+    "total_frames_analyzed": 100,
+    "benign_frames_dropped": 98,
+    "detected_risk_level": "HIGH",
+    "executive_verdict": "The emulated public Wi-Fi trace contains a gateway-claiming ARP anomaly and a plaintext HTTP device log leak. Treat this network path as unsafe until the endpoint is moved to a trusted encrypted connection."
+  },
+  "detected_nodes": [
+    {
+      "id": "node_0",
+      "ip_address": "192.168.50.1",
+      "mac_address": "44:65:0d:10:20:01",
+      "device_type": "GATEWAY",
+      "vendor_oui": "Amazon Technologies",
+      "status": "SECURE"
+    },
+    {
+      "id": "node_1",
+      "ip_address": "192.168.50.10",
+      "mac_address": "8c:85:90:4a:2f:11",
+      "device_type": "USER_LAPTOP",
+      "vendor_oui": "Apple",
+      "status": "SECURE"
+    },
+    {
+      "id": "node_2",
+      "ip_address": "192.168.50.23",
+      "mac_address": "28:6c:07:aa:11:09",
+      "device_type": "TARGET_ENDPOINT",
+      "vendor_oui": "Xiaomi Communications",
+      "status": "VULNERABLE"
+    },
+    {
+      "id": "node_3",
+      "ip_address": "192.168.50.24",
+      "mac_address": "f8:ff:c2:19:da:21",
+      "device_type": "TARGET_ENDPOINT",
+      "vendor_oui": "Apple",
+      "status": "SECURE"
+    },
+    {
+      "id": "node_4",
+      "ip_address": "192.168.50.31",
+      "mac_address": "3c:5a:b4:77:80:ef",
+      "device_type": "UNKNOWN",
+      "vendor_oui": "Google",
+      "status": "SECURE"
+    },
+    {
+      "id": "node_5",
+      "ip_address": "192.168.50.44",
+      "mac_address": "b8:27:eb:0a:13:7b",
+      "device_type": "UNKNOWN",
+      "vendor_oui": "Raspberry Pi Foundation",
+      "status": "SECURE"
+    },
+    {
+      "id": "node_6",
+      "ip_address": "192.168.50.77",
+      "mac_address": "de:ad:be:ef:13:37",
+      "device_type": "SUSPICIOUS_PROXIED_NODE",
+      "vendor_oui": "Unknown",
+      "status": "COMPROMISED"
+    }
+  ],
+  "threat_incidents": [
+    {
+      "incident_id": "th_0",
+      "source_node": "node_6",
+      "destination_node": "node_0",
+      "protocol": "ARP",
+      "severity": "CRITICAL",
+      "type": "ROUTING_SPOOF",
+      "technical_details": "Frame 83 is a gratuitous ARP reply from 192.168.50.77 / de:ad:be:ef:13:37 claiming the gateway address 192.168.50.1, while the expected gateway MAC is 44:65:0d:10:20:01.",
+      "remediation_action": "Disconnect from the public Wi-Fi, forget the network, then reconnect only through a trusted hotspot or VPN."
+    },
+    {
+      "incident_id": "th_1",
+      "source_node": "node_2",
+      "destination_node": "198.51.100.23",
+      "protocol": "HTTP",
+      "severity": "CRITICAL",
+      "type": "PLAINTEXT_DATA_LEAK",
+      "technical_details": "Frame 65 sent application telemetry from 192.168.50.23 to 198.51.100.23 over destination port 80 without transport encryption.",
+      "remediation_action": "Stop using the app on public Wi-Fi until it supports encrypted transport, or route the device through a trusted VPN."
+    }
+  ],
+  "visual_topology_edges": [
+    {
+      "from": "node_6",
+      "to": "node_0",
+      "relationship": "ATTACKING"
+    },
+    {
+      "from": "node_2",
+      "to": "198.51.100.23",
+      "relationship": "LEAKING_TO"
+    }
+  ]
+}
