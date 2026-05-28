@@ -499,14 +499,16 @@ class StateDatabase:
     def __init__(self, db_path: Path = STATE_DB_PATH) -> None:
         self.db_path = db_path
 
-    def append_model_response(self, model_response: str, raw_text: str) -> Dict[str, Any]:
+    def append_model_response(self, model_response: str, raw_text: str, skip_semantics: bool = False) -> Dict[str, Any]:
         try:
             audit = json.loads(model_response)
         except json.JSONDecodeError as exc:
             raise ModelResponseError("Model response failed json.loads(); persistence aborted.") from exc
 
         self._validate_audit_schema(audit)
-        self._validate_audit_semantics(audit, raw_text)
+        if not skip_semantics:
+            self._validate_audit_semantics(audit, raw_text)
+
         records = self._read_records()
         record = {
             "record_type": "threat_audit",
@@ -674,14 +676,25 @@ class StateDatabase:
 
 def run_pipeline(args: argparse.Namespace) -> Dict[str, Any]:
     print("--- OPENCLUE: OPEN-SOURCE THREAT DETECTION & TRIAGE PLATFORM ---", file=sys.stderr)
-    print(f"[*] Initializing telemetry generation (seed={args.seed or 'random'})...", file=sys.stderr)
-    generator = RawTelemetryGenerator(
-        output_path=Path(args.log_path),
-        benign_line_count=args.benign_lines,
-        seed=args.seed,
-    )
-    log_path = generator.generate()
-    print(f"[+] Synthetic logs written to {log_path} ({args.benign_lines + 2} lines)", file=sys.stderr)
+    log_path = Path(args.log_path)
+    
+    if args.stdin:
+        print("[*] Reading raw telemetry from stdin...", file=sys.stderr)
+        raw_text = sys.stdin.read()
+        if not raw_text.strip():
+            raise ValueError("No data received on stdin.")
+        DATA_DIR.mkdir(parents=True, exist_ok=True)
+        log_path.write_text(raw_text, encoding="utf-8")
+        print(f"[+] Stdin captured and written to {log_path} ({len(raw_text.splitlines())} lines)", file=sys.stderr)
+    else:
+        print(f"[*] Initializing telemetry generation (seed={args.seed or 'random'})...", file=sys.stderr)
+        generator = RawTelemetryGenerator(
+            output_path=log_path,
+            benign_line_count=args.benign_lines,
+            seed=args.seed,
+        )
+        generator.generate()
+        print(f"[+] Synthetic logs written to {log_path} ({args.benign_lines + 2} lines)", file=sys.stderr)
 
     if args.generate_only:
         return {
@@ -700,7 +713,7 @@ def run_pipeline(args: argparse.Namespace) -> Dict[str, Any]:
         api_key=args.api_key,
         timeout_seconds=args.timeout,
     )
-    raw_text = open(log_path, "r", encoding="utf-8").read()
+    raw_text = log_path.read_text(encoding="utf-8")
     database = StateDatabase(Path(args.db_path))
 
     print("[*] Analyzing raw telemetry stream... (this may take 1-2 minutes on local hardware)", file=sys.stderr)
@@ -716,7 +729,7 @@ def run_pipeline(args: argparse.Namespace) -> Dict[str, Any]:
         attempts += 1
         try:
             print(f"[*] Validating model response (Attempt {attempts}/{max_retries + 1})...", file=sys.stderr)
-            audit = database.append_model_response(model_response, raw_text)
+            audit = database.append_model_response(model_response, raw_text, skip_semantics=args.stdin)
             print("[+] Audit successfully validated and persisted.", file=sys.stderr)
             return {
                 "status": "completed",
@@ -758,6 +771,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--log-path", default=str(RAW_WIRE_DUMP_PATH), help="Output path for raw wire dump.")
     parser.add_argument("--db-path", default=str(STATE_DB_PATH), help="Local JSON database path.")
     parser.add_argument("--generate-only", action="store_true", help="Only generate raw telemetry; do not call the model.")
+    parser.add_argument("--stdin", action="store_true", help="Read raw telemetry from standard input instead of generating it.")
     return parser
 
 

@@ -41,11 +41,17 @@ OpenClue addresses the "Semantic Weakness" of small local models (7B) by wrappin
 ### 🌐 Secondary Audience: Remote Engineers & Digital Nomads
 *   **The Pain Point:** Privacy-focused individuals and technical remote workers who routinely connect to unverified, hazardous public Wi-Fi networks (cafes, airports, co-working spaces).
 *   **The Value:** Provides continuous, zero-config automated verification of local routing table anomalies and token leak exposure, protecting endpoints at a single glance.
-## 🚀 Getting Started
 
-### 1. Setup the Backend
 ---
 
+## 🚀 Getting Started
+
+### 1. Prerequisites
+- Python 3.12+
+- Wireshark/`tshark` installed (for live capture)
+- [Ollama](https://ollama.com/) with `thirdeyeai/Qwen2.5-Coder-7B-Instruct-Uncensored:Q4_0` (or an OpenRouter API key)
+
+### 2. Setup
 ```bash
 # Clone the repo
 git clone https://github.com/tejasprasad2008-afk/OpenClue.git
@@ -56,20 +62,29 @@ cp .env.example .env
 # Add your OPENROUTER_API_KEY to .env
 ```
 
-### 2. Launch the Dashboard
+### 3. Usage Modes
+
+#### **Mode A: Synthetic Test Run (MVP)**
+Perfect for testing the self-healing loop without needing network permissions.
 ```bash
-npm install
-npm run dev
+python3 threat_console_mvp.py
 ```
-Visit `http://localhost:3000` and click **"Initialize Local Agentic Sifting"** to start a virtual triage scan.
+
+#### **Mode B: Live Network Triage (Wireshark)**
+Connect OpenClue to your real home network. Use `tshark` (the Wireshark CLI) to capture packets and pipe them into the engine.
+```bash
+# Capture 100 packets on Wi-Fi and analyze
+sudo tshark -l -i en0 -c 100 | python3 threat_console_mvp.py --stdin
+```
+*Note: Replace `en0` with your actual network interface (use `tshark -D` to list them).*
 
 ---
 
 ## 🗺️ Roadmap (Day 4 - Day 7)
 - [x] **Day 1-2**: Backend Engine & Self-Healing Loop implementation.
 - [x] **Day 3**: Next.js Monochrome Dashboard & API Bridge.
-- [ ] **Day 4**: Real-time log polling & UI animations.
-- [ ] **Day 5**: **Live Wireshark/tshark integration** (Real-time packet sniffing).
+- [x] **Day 4**: **Live Wireshark/tshark integration** & Stdin support.
+- [ ] **Day 5**: Real-time log polling & UI animations.
 - [ ] **Day 6**: Vendor OUI database lookup & device inventory.
 - [ ] **Day 7**: Apple Watch & iOS critical threat push notifications.
 

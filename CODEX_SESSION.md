@@ -30,12 +30,16 @@ While OpenRouter / alternative endpoint routing is utilized on the backend for l
 The main entry point is `threat_console_mvp.py`.
 
 ```bash
-# Run the full OpenClue pipeline
+# Mode A: Run with synthetic emulated telemetry (Test Mode)
 python3 threat_console_mvp.py
 
-# Generate logs without analysis (useful for debugging)
-python3 threat_console_mvp.py --generate-only
+# Mode B: Run with live network data (Wireshark/tshark integration)
+sudo tshark -l -i en0 -c 100 | python3 threat_console_mvp.py --stdin
 ```
+
+## Mode Details
+- **Synthetic Mode**: Uses `RawTelemetryGenerator` to inject deterministic anomalies for testing the self-healing loop.
+- **Live Mode**: Uses `--stdin` to bypass generation and accept piped output from external sniffers. Semantic validation is relaxed to allow for normal network traffic analysis.
 
 ## Project Structure
 
