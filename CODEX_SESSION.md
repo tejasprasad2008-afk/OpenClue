@@ -16,6 +16,10 @@ OpenClue is an open-source automation engine modeled after enterprise internal l
 - **LLM Integration**: Supports OpenAI, OpenRouter, and local Ollama endpoints.
 - **JSON Schema Validation**: Rigorous structural and semantic assertion gates.
 
+## Environment Context & Architecture
+
+While OpenRouter / alternative endpoint routing is utilized on the backend for local validation runs (to preserve token bandwidth), the master orchestrator, state compilation, and high-context log compression pipeline are architected for Codex specifications. This ensures high-fidelity triage even when operating within constrained local environments.
+
 ## Getting Started
 
 ### Prerequisites
