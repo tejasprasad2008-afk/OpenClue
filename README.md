@@ -23,9 +23,29 @@ OpenClue addresses the "Semantic Weakness" of small local models (7B) by wrappin
 
 ---
 
+## 🛠️ Tools & Tech Stack
+
+*   **Core Orchestration Engine:** Python 3.12 (Standard Library First) – Handles deterministic hardware data parsing, raw network string extraction, and state processing loops cleanly.
+*   **AI Agentic Framework:** Codex-Optimized Automation Pipeline – Utilizes structural response formatting via strict `json_schema` constraints coupled with an active **4-turn iterative Semantic Self-Healing Loop** for autonomous threat classification.
+*   **Local Inference & Model Routing:** Local Model Execution Layers via OpenRouter – Features integration capabilities for local inference engines (e.g., `Qwen2.5-Coder-7B-Instruct-Uncensored`) utilizing a context depth window of up to 16,384 tokens to preserve operational bandwidth while processing long network logs.
+*   **Persistence Layer:** Structured Atomic File-System Storage – Saves state histories, analysis flags, and session records safely to `data/openclue_triage_db.json`.
+
+---
+
+## 🎯 Ideal Customer Profile (ICP) & Target Audience
+
+### 👥 Primary Audience: DevSecOps & Security Analysts
+*   **The Pain Point:** Junior incident response teams and defensive security developers who are drowning in daily, unstructured log text and raw packet bytes.
+*   **The Value:** OpenClue compresses their toxic, multi-step command-line verification chores down into an instantaneous 3-step automated triage mapping matrix.
+
+### 🌐 Secondary Audience: Remote Engineers & Digital Nomads
+*   **The Pain Point:** Privacy-focused individuals and technical remote workers who routinely connect to unverified, hazardous public Wi-Fi networks (cafes, airports, co-working spaces).
+*   **The Value:** Provides continuous, zero-config automated verification of local routing table anomalies and token leak exposure, protecting endpoints at a single glance.
 ## 🚀 Getting Started
 
 ### 1. Setup the Backend
+---
+
 ```bash
 # Clone the repo
 git clone https://github.com/tejasprasad2008-afk/OpenClue.git
